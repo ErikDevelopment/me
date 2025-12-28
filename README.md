@@ -8,7 +8,7 @@ Ich entwickle moderne Webanwendungen, APIs und Automatisierungen – mit Fokus a
 ## 🌐 Live Website
 
 👉 **Linktree / Portfolio**  
-🔗 https://ErikDevelopment.github.io
+🔗 [https://ErikDevelopment.github.io](https://erikdevelopment.github.io/me/)
 
 ---
 
