@@ -1,6 +1,8 @@
+/* Config */
 const USERNAME = "ErikDevelopment";
 const API_URL = `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`;
 
+/* DOM Elements */
 const els = {
   grid: document.getElementById("grid"),
   loader: document.getElementById("loader"),
@@ -11,16 +13,23 @@ const els = {
   hideForks: document.getElementById("hideForks"),
 };
 
+/* State */
 let allRepos = [];
 
+/* Format Date (DE) */
 function fmtDate(iso) {
   try {
-    return new Date(iso).toLocaleDateString("de-DE", { year: "numeric", month: "2-digit", day: "2-digit" });
+    return new Date(iso).toLocaleDateString("de-DE", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    });
   } catch {
     return iso ?? "";
   }
 }
 
+/* Escape HTML (XSS-safe) */
 function escapeHtml(str) {
   return (str ?? "")
     .replaceAll("&", "&amp;")
@@ -30,21 +39,23 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
+/* Repo Score (optische Gewichtung) */
 function scoreRepo(repo) {
-  // optional: kleine "Aktuell"-Heuristik
-  // (du kannst das später anpassen)
   const stars = repo.stargazers_count || 0;
   const forks = repo.forks_count || 0;
   return stars * 2 + forks;
 }
 
+/* Filter + Sort Logic */
 function getFilteredSorted() {
   const q = (els.search.value || "").trim().toLowerCase();
   const hideForks = els.hideForks.checked;
 
   let list = allRepos.slice();
 
-  if (hideForks) list = list.filter(r => !r.fork);
+  if (hideForks) {
+    list = list.filter(r => !r.fork);
+  }
 
   if (q) {
     list = list.filter(r => {
@@ -58,23 +69,32 @@ function getFilteredSorted() {
   const sort = els.sort.value;
 
   if (sort === "name") {
-    list.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    list.sort((a, b) =>
+      (a.name || "").localeCompare(b.name || "")
+    );
   } else if (sort === "stars") {
-    list.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0));
+    list.sort((a, b) =>
+      (b.stargazers_count || 0) - (a.stargazers_count || 0)
+    );
   } else {
     // updated
-    list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+    list.sort((a, b) =>
+      new Date(b.updated_at) - new Date(a.updated_at)
+    );
   }
 
   return list;
 }
 
+/* Render Grid */
 function render() {
   const list = getFilteredSorted();
 
   els.stats.textContent =
     `${list.length} Repos angezeigt` +
-    (allRepos.length !== list.length ? ` (von ${allRepos.length})` : "");
+    (allRepos.length !== list.length
+      ? ` (von ${allRepos.length})`
+      : "");
 
   els.grid.innerHTML = list.map(repo => {
     const name = escapeHtml(repo.name);
@@ -86,14 +106,17 @@ function render() {
     const updated = fmtDate(repo.updated_at);
     const isFork = repo.fork;
 
-    const featured = scoreRepo(repo) >= 10; // kleine Markierung, nur optisch
+    const featured = scoreRepo(repo) >= 10;
+
     return `
       <a class="card" href="${url}" target="_blank" rel="noopener noreferrer">
         <div class="card-top">
           <div>
             <div class="title">${name}</div>
           </div>
-          <div class="badge ${featured ? "primary" : ""}">${featured ? "featured" : "repo"}</div>
+          <div class="badge ${featured ? "primary" : ""}">
+            ${featured ? "featured" : "repo"}
+          </div>
         </div>
 
         <div class="desc">${desc}</div>
@@ -123,6 +146,7 @@ function render() {
   }
 }
 
+/* Load Repositories */
 async function loadRepos() {
   els.loader.hidden = false;
   els.error.hidden = true;
@@ -140,10 +164,9 @@ async function loadRepos() {
     const repos = await res.json();
     allRepos = repos.filter(r => !r.disabled);
 
-    // ✅ Repos anzeigen
     render();
 
-    // ✅ Loader sanft ausblenden & entfernen
+    // Fade out loader
     els.loader.style.opacity = "0";
     setTimeout(() => els.loader.remove(), 300);
 
@@ -155,10 +178,10 @@ async function loadRepos() {
   }
 }
 
-
-
+/* Events */
 els.search.addEventListener("input", render);
 els.sort.addEventListener("change", render);
 els.hideForks.addEventListener("change", render);
 
+/* Init */
 loadRepos();

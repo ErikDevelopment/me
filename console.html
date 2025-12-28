@@ -11,18 +11,23 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+    <header class="header">
+    <div class="header-content">
+      <span class="logo">ERIK'S HUB</span>
+      <a href="linktree.html" class="back-btn">← zurück</a>
+    </div>
+  </header>
 
   <div class="background-grid"></div>
 
   <main class="console-container">
-    <a href="linktree.html" class="back-link">← Zurück zum Linktree</a>
-
     <section class="terminal">
       <div class="terminal-header">
         <span class="dot red"></span>
         <span class="dot yellow"></span>
         <span class="dot green"></span>
         <span class="title">erik@console</span>
+        <button id="restartBtn" class="restart-btn" title="Restart terminal">↻</button>
       </div>
 
       <div class="terminal-body" id="terminal"></div>
@@ -30,5 +35,6 @@
   </main>
 
   <script src="js/console.js"></script>
+  <script src="js/easter-egg.js"></script>
 </body>
 </html>

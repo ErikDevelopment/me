@@ -1,4 +1,4 @@
-/* Variables */
+/* Theme Variables */
 :root {
   --bg: #0a0f14;
   --bg-card: #111820;
@@ -31,7 +31,7 @@ body {
 .background-grid {
   position: fixed;
   inset: 0;
-  background-image: 
+  background-image:
     linear-gradient(rgba(34, 197, 94, 0.08) 1px, transparent 1px),
     linear-gradient(90deg, rgba(34, 197, 94, 0.08) 1px, transparent 1px);
   background-size: 50px 50px;
@@ -66,7 +66,8 @@ body {
   color: var(--text);
 }
 
-.projects-btn {
+/* Back Button */
+.back-btn {
   padding: 0.5rem 1rem;
   border: 1px solid var(--border);
   border-radius: 9999px;
@@ -76,44 +77,19 @@ body {
   transition: all 0.3s ease;
 }
 
-.projects-btn:hover {
+.back-btn:hover {
   background: var(--bg-card);
   border-color: var(--primary);
+  box-shadow: var(--glow);
 }
 
-/* Main */
+/* Main Layout */
 .main {
   position: relative;
   z-index: 10;
   max-width: 72rem;
   margin: 0 auto;
   padding: 6rem 1rem 3rem;
-}
-
-/* Back Link */
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.875rem;
-  margin-bottom: 2rem;
-  transition: color 0.3s ease;
-}
-
-.back-link:hover {
-  color: var(--primary);
-}
-
-.back-link svg {
-  width: 1rem;
-  height: 1rem;
-  transition: transform 0.3s ease;
-}
-
-.back-link:hover svg {
-  transform: translateX(-4px);
 }
 
 /* Bento Grid */
@@ -183,13 +159,13 @@ body {
   color: var(--primary);
 }
 
+/* Avatar Icon */
 .avatar-icon {
   position: relative;
   width: 4rem;
   height: 4rem;
 }
 
-/* Kreis + Clip nur fürs Bild */
 .avatar-icon .avatar-img {
   width: 100%;
   height: 100%;
@@ -198,11 +174,11 @@ body {
   border: 2px solid var(--primary);
   box-shadow: var(--glow);
 }
-/* Katze Overlay */
+
 .avatar-icon .cat-overlay {
   position: absolute;
-  top: -8px;        /* ⬅️ oben */
-  right: -6px;      /* ⬅️ rechts */
+  top: -8px;
+  right: -6px;
   width: 5rem;
   height: auto;
   z-index: 2;
@@ -210,7 +186,7 @@ body {
   animation: catFloat 2.5s ease-in-out infinite;
 }
 
-
+/* Emoji Card */
 .card-emoji {
   width: 3.5rem;
   height: 3.5rem;
@@ -226,14 +202,13 @@ body {
   transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 }
 
-
 .bento-card:hover .card-emoji {
   transform: scale(1.1);
   border-color: var(--primary);
   box-shadow: 0 0 12px rgba(34,197,94,0.35);
 }
 
-
+/* Card Text */
 .card-subtitle {
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -291,12 +266,12 @@ body {
   height: 3rem;
   border-radius: 0.75rem;
   background: var(--bg);
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
   color: var(--primary);
-  border: 1px solid var(--border);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
@@ -304,7 +279,6 @@ body {
   transform: scale(1.12);
   box-shadow: var(--glow);
 }
-
 
 /* Footer */
 .footer {
