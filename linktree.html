@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>@erik_dev | Linktree</title>
+  <meta name="description" content="Full-Stack Entwickler aus Deutschland. Alle meine Links an einem Ort.">
+  <link rel="stylesheet" href="css/linktree.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Background Grid -->
+  <div class="background-grid"></div>
+
+  <main class="container">
+    <!-- Profile Section -->
+    <div class="profile">
+      <div class="avatar-wrapper">
+        <div class="avatar-glow"></div>
+
+        <div class="avatar">
+          <!-- Profilbild -->
+          <img
+            src="https://avatars.githubusercontent.com/u/105929625?s=400"
+            alt="GitHub Avatar"
+            class="avatar-img"
+          >
+
+          <!-- Katze / Animation -->
+          <img
+            src="images/avatar.png"
+            alt="Cat Overlay"
+            class="cat-overlay"
+          >
+        </div>
+      </div>
+      
+      <div class="profile-info">
+        <h1 class="name"><span class="highlight">@</span>erik_dev<span class="cursor">_</span></h1>
+        <p class="bio">Full-Stack Entwickler | Developer from Germany</p>
+      </div>
+      
+      <div class="status">
+        <span class="status-dot"></span>
+        <span>Verfügbar für Freelance-Projekte</span>
+      </div>
+    </div>
+
+    <!-- Portfolio Link (Featured) -->
+    <a href="portfolio.html" class="link-button featured">
+      <span class="prompt">&gt;</span>
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+      <span class="label">Mein Portfolio</span>
+      <span class="arrow">→</span>
+    </a>
+
+    <!-- Links -->
+    <nav class="links">
+      <a href="https://github.com/ErikDevelopment" target="_blank" rel="noopener noreferrer" class="link-button" style="animation-delay: 0.1s">
+        <span class="prompt">&gt;</span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+        <span class="label">GitHub</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="portfolio.html" rel="noopener noreferrer" class="link-button" style="animation-delay: 0.2s">
+        <span class="prompt">&gt;</span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="2" y1="12" x2="22" y2="12"></line>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        </svg>
+        <span class="label">Portfolio</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="blog.html" rel="noopener noreferrer" class="link-button" style="animation-delay: 0.3s">
+        <span class="prompt">&gt;</span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span class="label">Tech Blog</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="projects.html" rel="noopener noreferrer" class="link-button" style="animation-delay: 0.4s">
+        <span class="prompt">&gt;</span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="16 18 22 12 16 6"></polyline>
+          <polyline points="8 6 2 12 8 18"></polyline>
+        </svg>
+        <span class="label">Aktuelle Projekte</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="console.html" class="link-button" style="animation-delay: 0.5s">
+        <span class="prompt">&gt;</span>
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="2" y="3" width="20" height="18" rx="2" ry="2"></rect>
+          <polyline points="7 8 11 12 7 16"></polyline>
+          <line x1="13" y1="16" x2="17" y2="16"></line>
+        </svg>
+        <span class="label">Console</span>
+        <span class="arrow">→</span>
+      </a>
+
+    </nav>
+
+    <!-- Social Icons -->
+    <div class="socials">
+      <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="GitHub">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+        </svg>
+      </a>
+      <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="LinkedIn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+          <rect x="2" y="9" width="4" height="12"></rect>
+          <circle cx="4" cy="4" r="2"></circle>
+        </svg>
+      </a>
+      <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Twitter">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+        </svg>
+      </a>
+      <a href="mailto:hello@developer.de" class="social-icon" aria-label="Email">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p><span class="highlight">$</span> echo "Made with ❤️ and lots of ☕"</p>
+    </footer>
+  </main>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

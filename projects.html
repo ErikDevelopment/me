@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Erik's Hub | Aktuelle Projekte</title>
+  <meta name="description" content="Öffentliche GitHub-Repositories & aktuelle Projekte" />
+  <link rel="stylesheet" href="css/projects.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-grid"></div>
+
+  <header class="header">
+    <div class="header-content">
+      <span class="logo">ERIK'S HUB</span>
+      <a href="linktree.html" class="back-btn">← zurück</a>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="intro">
+      <h1><span class="highlight">$</span> projects</h1>
+      <p>Alle öffentlichen Repositories von <span class="highlight">@ErikDevelopment</span> — automatisch geladen.</p>
+
+      <div class="controls">
+        <input id="search" class="input" type="search" placeholder="Repo suchen… (Name, Beschreibung, Sprache)" />
+        <select id="sort" class="select">
+          <option value="updated">Zuletzt aktualisiert</option>
+          <option value="stars">Stars</option>
+          <option value="name">Name</option>
+        </select>
+        <label class="check">
+          <input id="hideForks" type="checkbox" />
+          Forks ausblenden
+        </label>
+      </div>
+
+      <div class="stats" id="stats" aria-live="polite"></div>
+    </section>
+
+    <section class="grid" id="grid" aria-live="polite">
+      <!-- JS rendert Cards hier rein -->
+    </section>
+
+    <section class="state" id="state">
+      <div class="loader" id="loader">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="loading-text">Lade Repositories…</span>
+      </div>
+      <div class="error" id="error" hidden></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><span class="highlight">$</span> echo "Made with ❤️ and lots of ☕"</p>
+  </footer>
+
+  <script src="js/projects.js"></script>
+</body>
+</html>
