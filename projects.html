@@ -27,13 +27,23 @@
 
       <div class="controls">
         <input id="search" class="input" type="search" placeholder="Repo suchen… (Name, Beschreibung, Sprache)" />
-        <select id="sort" class="select">
-          <option value="updated">Zuletzt aktualisiert</option>
-          <option value="stars">Stars</option>
-          <option value="name">Name</option>
-        </select>
+        <div class="custom-select" id="sortSelect">
+          <button class="select-trigger" type="button">
+            <span>Zuletzt aktualisiert</span>
+            <svg class="chevron" viewBox="0 0 24 24">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          <div class="select-menu">
+            <div data-value="updated">Zuletzt aktualisiert</div>
+            <div data-value="stars">Stars</div>
+            <div data-value="name">Name</div>
+          </div>
+        </div>
         <label class="check">
           <input id="hideForks" type="checkbox" />
+          <span class="custom-check"></span>
           Forks ausblenden
         </label>
       </div>

@@ -1,35 +1,77 @@
-/* Config */
+/* =======================
+   Config
+======================= */
 const USERNAME = "ErikDevelopment";
 const API_URL = `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`;
 
-/* DOM Elements */
+/* =======================
+   DOM Elements
+======================= */
 const els = {
   grid: document.getElementById("grid"),
   loader: document.getElementById("loader"),
   error: document.getElementById("error"),
   stats: document.getElementById("stats"),
   search: document.getElementById("search"),
-  sort: document.getElementById("sort"),
   hideForks: document.getElementById("hideForks"),
+  sortSelect: document.getElementById("sortSelect"),
 };
 
-/* State */
+/* =======================
+   Custom Select (Sort)
+======================= */
+const sortTrigger = els.sortSelect.querySelector(".select-trigger");
+const sortLabel = els.sortSelect.querySelector(".select-trigger span");
+const sortOptions = els.sortSelect.querySelectorAll(".select-menu div");
+
+let currentSort = "updated";
+
+// Open / Close
+sortTrigger.addEventListener("click", () => {
+  els.sortSelect.classList.toggle("open");
+});
+
+// Select option
+sortOptions.forEach(option => {
+  option.addEventListener("click", () => {
+    currentSort = option.dataset.value;
+    sortLabel.textContent = option.textContent;
+
+    sortOptions.forEach(o => o.classList.remove("active"));
+    option.classList.add("active");
+
+    els.sortSelect.classList.remove("open");
+    render();
+  });
+});
+
+// Click outside → close
+document.addEventListener("click", e => {
+  if (!els.sortSelect.contains(e.target)) {
+    els.sortSelect.classList.remove("open");
+  }
+});
+
+/* =======================
+   State
+======================= */
 let allRepos = [];
 
-/* Format Date (DE) */
+/* =======================
+   Helpers
+======================= */
 function fmtDate(iso) {
   try {
     return new Date(iso).toLocaleDateString("de-DE", {
       year: "numeric",
       month: "2-digit",
-      day: "2-digit"
+      day: "2-digit",
     });
   } catch {
     return iso ?? "";
   }
 }
 
-/* Escape HTML (XSS-safe) */
 function escapeHtml(str) {
   return (str ?? "")
     .replaceAll("&", "&amp;")
@@ -39,14 +81,15 @@ function escapeHtml(str) {
     .replaceAll("'", "&#039;");
 }
 
-/* Repo Score (optische Gewichtung) */
 function scoreRepo(repo) {
   const stars = repo.stargazers_count || 0;
   const forks = repo.forks_count || 0;
   return stars * 2 + forks;
 }
 
-/* Filter + Sort Logic */
+/* =======================
+   Filter + Sort
+======================= */
 function getFilteredSorted() {
   const q = (els.search.value || "").trim().toLowerCase();
   const hideForks = els.hideForks.checked;
@@ -59,42 +102,43 @@ function getFilteredSorted() {
 
   if (q) {
     list = list.filter(r => {
-      const name = (r.name || "").toLowerCase();
-      const desc = (r.description || "").toLowerCase();
-      const lang = (r.language || "").toLowerCase();
-      return name.includes(q) || desc.includes(q) || lang.includes(q);
+      return (
+        (r.name || "").toLowerCase().includes(q) ||
+        (r.description || "").toLowerCase().includes(q) ||
+        (r.language || "").toLowerCase().includes(q)
+      );
     });
   }
 
-  const sort = els.sort.value;
-
-  if (sort === "name") {
-    list.sort((a, b) =>
-      (a.name || "").localeCompare(b.name || "")
-    );
-  } else if (sort === "stars") {
-    list.sort((a, b) =>
-      (b.stargazers_count || 0) - (a.stargazers_count || 0)
-    );
+  if (currentSort === "name") {
+    list.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+  } else if (currentSort === "stars") {
+    list.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0));
   } else {
-    // updated
-    list.sort((a, b) =>
-      new Date(b.updated_at) - new Date(a.updated_at)
-    );
+    list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
   }
 
   return list;
 }
 
-/* Render Grid */
+/* =======================
+   Render
+======================= */
 function render() {
   const list = getFilteredSorted();
 
   els.stats.textContent =
     `${list.length} Repos angezeigt` +
-    (allRepos.length !== list.length
-      ? ` (von ${allRepos.length})`
-      : "");
+    (list.length !== allRepos.length ? ` (von ${allRepos.length})` : "");
+
+  if (list.length === 0) {
+    els.grid.innerHTML = `
+      <div class="error">
+        Keine Treffer. Versuch andere Suche oder deaktivier „Forks ausblenden“.
+      </div>
+    `;
+    return;
+  }
 
   els.grid.innerHTML = list.map(repo => {
     const name = escapeHtml(repo.name);
@@ -105,15 +149,12 @@ function render() {
     const forks = repo.forks_count || 0;
     const updated = fmtDate(repo.updated_at);
     const isFork = repo.fork;
-
     const featured = scoreRepo(repo) >= 10;
 
     return `
       <a class="card" href="${url}" target="_blank" rel="noopener noreferrer">
         <div class="card-top">
-          <div>
-            <div class="title">${name}</div>
-          </div>
+          <div class="title">${name}</div>
           <div class="badge ${featured ? "primary" : ""}">
             ${featured ? "featured" : "repo"}
           </div>
@@ -136,29 +177,22 @@ function render() {
       </a>
     `;
   }).join("");
-
-  if (list.length === 0) {
-    els.grid.innerHTML = `
-      <div class="error">
-        Keine Treffer. Versuch andere Suche oder deaktivier „Forks ausblenden“.
-      </div>
-    `;
-  }
 }
 
-/* Load Repositories */
+/* =======================
+   Load Repos
+======================= */
 async function loadRepos() {
   els.loader.hidden = false;
   els.error.hidden = true;
 
   try {
     const res = await fetch(API_URL, {
-      headers: { "Accept": "application/vnd.github+json" }
+      headers: { Accept: "application/vnd.github+json" },
     });
 
     if (!res.ok) {
-      const text = await res.text();
-      throw new Error(`GitHub API Error ${res.status}: ${text}`);
+      throw new Error(`GitHub API Error ${res.status}`);
     }
 
     const repos = await res.json();
@@ -166,7 +200,6 @@ async function loadRepos() {
 
     render();
 
-    // Fade out loader
     els.loader.style.opacity = "0";
     setTimeout(() => els.loader.remove(), 300);
 
@@ -178,10 +211,13 @@ async function loadRepos() {
   }
 }
 
-/* Events */
+/* =======================
+   Events
+======================= */
 els.search.addEventListener("input", render);
-els.sort.addEventListener("change", render);
 els.hideForks.addEventListener("change", render);
 
-/* Init */
+/* =======================
+   Init
+======================= */
 loadRepos();

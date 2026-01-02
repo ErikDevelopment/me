@@ -142,11 +142,61 @@ body {
 .check {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
   font-size: 0.875rem;
   color: var(--text-muted);
+  cursor: pointer;
   user-select: none;
 }
+
+/* Native Checkbox verstecken */
+.check input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Custom Box */
+.custom-check {
+  width: 1.05rem;
+  height: 1.05rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--border);
+  background: rgba(17,24,32,0.6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.check:hover .custom-check {
+  border-color: rgba(34,197,94,0.6);
+  box-shadow: var(--glow);
+}
+
+/* Checkmark */
+.custom-check::after {
+  content: "";
+  width: 0.45rem;
+  height: 0.25rem;
+  border-left: 2px solid var(--primary);
+  border-bottom: 2px solid var(--primary);
+  transform: rotate(-45deg) scale(0);
+  transition: transform 0.2s ease;
+}
+
+/* Checked State */
+.check input:checked + .custom-check {
+  background: rgba(34,197,94,0.12);
+  border-color: var(--primary);
+  box-shadow: var(--glow);
+}
+
+.check input:checked + .custom-check::after {
+  transform: rotate(-45deg) scale(1);
+}
+
 
 /* Stats */
 .stats {
@@ -284,6 +334,66 @@ body {
   border: 1px solid rgba(255, 90, 90, 0.35);
   background: rgba(255, 90, 90, 0.08);
   color: #ffb4b4;
+}
+
+.custom-select {
+  position: relative;
+}
+
+.select-trigger {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background: rgba(17,24,32,0.55);
+  color: var(--text);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.select-trigger:hover {
+  border-color: rgba(34,197,94,0.6);
+  box-shadow: var(--glow);
+}
+
+.chevron {
+  width: 1rem;
+  height: 1rem;
+  stroke: var(--primary);
+  fill: none;
+  stroke-width: 2;
+}
+
+.select-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  box-shadow: var(--glow-intense);
+  overflow: hidden;
+  display: none;
+  z-index: 100;
+}
+
+.select-menu div {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.select-menu div:hover {
+  background: rgba(34,197,94,0.08);
+  color: var(--primary);
+}
+
+.custom-select.open .select-menu {
+  display: block;
 }
 
 /* Footer */
