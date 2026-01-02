@@ -29,7 +29,7 @@ const orgaMenu   = document.getElementById("orgaMenu");
    Custom Select – Sort
 ======================= */
 const sortTrigger = els.sortSelect.querySelector(".select-trigger");
-const sortLabel = els.sortSelect.querySelector(".select-trigger span");
+const sortLabel   = els.sortSelect.querySelector(".select-trigger span");
 const sortOptions = els.sortSelect.querySelectorAll(".select-menu div");
 
 sortTrigger.addEventListener("click", () => {
@@ -106,11 +106,19 @@ function getRepoOrga(repo) {
    Organization Select
 ======================= */
 function buildOrgaSelect(repos) {
-  const orgas = ["ALL", ...new Set(repos.map(getRepoOrga))];
+  // Alle Owner aus Repos sammeln (User + Orgas)
+  const owners = new Set(repos.map(getRepoOrga));
+
+  // Reihenfolge: ALL → User → Orgas
+  const orgas = [
+    "ALL",
+    USERNAME,
+    ...[...owners].filter(o => o !== USERNAME)
+  ];
 
   orgaMenu.innerHTML = orgas.map(o => `
     <div data-orga="${o}">
-      ${o === "ALL" ? "Alle Organizations" : o}
+      ${o === "ALL" ? "Alle Repositories" : o}
     </div>
   `).join("");
 
@@ -123,6 +131,7 @@ function buildOrgaSelect(repos) {
     });
   });
 }
+
 
 /* =======================
    Filter + Sort
@@ -167,79 +176,8 @@ function render() {
   els.stats.textContent =
     `${repos.length} Repos angezeigt (gesamt ${allRepos.length})`;
 
-  els.grid.innerHTML = `
-    ${renderOrgTiles()}
-    ${renderRepoTiles(repos)}
-  `;
+  els.grid.innerHTML = renderRepoTiles(repos);
 }
-
-/* =======================
-   Render – Organizations
-======================= */
-function renderOrgTiles() {
-  // Fallback: User-Profil
-  if (!publicOrgs || publicOrgs.length === 0) {
-    return `
-      <a
-        class="card"
-        href="https://github.com/${USERNAME}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div class="card-top" style="gap:.75rem;">
-          <img
-            src="https://github.com/${USERNAME}.png"
-            alt="${USERNAME}"
-            style="width:32px;height:32px;border-radius:50%;"
-          />
-          <div class="title">${USERNAME}</div>
-          <div class="badge primary">profile</div>
-        </div>
-
-        <div class="desc">
-          Persönliches GitHub-Profil
-        </div>
-
-        <div class="meta">
-          <span class="highlight">Open Profile →</span>
-        </div>
-      </a>
-    `;
-  }
-
-  // Normale Orga-Kacheln
-  return publicOrgs.map(org => {
-    const url = org.html_url || `https://github.com/${org.login}`;
-
-    return `
-      <a
-        class="card"
-        href="${url}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div class="card-top" style="gap:.75rem;">
-          <img
-            src="${org.avatar_url}"
-            alt="${org.login}"
-            style="width:32px;height:32px;border-radius:50%;"
-          />
-          <div class="title">${org.login}</div>
-          <div class="badge primary">organization</div>
-        </div>
-
-        <div class="desc">
-          ${org.description || "Öffentliche GitHub Organization"}
-        </div>
-
-        <div class="meta">
-          <span class="highlight">Open Organization →</span>
-        </div>
-      </a>
-    `;
-  }).join("");
-}
-
 
 /* =======================
    Render – Repos
@@ -254,7 +192,7 @@ function renderRepoTiles(repos) {
   }
 
   return repos.map(repo => `
-    <a class="card" href="${repo.html_url}" target="_blank">
+    <a class="card" href="${repo.html_url}" target="_blank" rel="noopener noreferrer">
       <div class="card-top">
         <div class="title">${escapeHtml(repo.name)}</div>
         <div class="badge ${scoreRepo(repo) >= 10 ? "primary" : ""}">
@@ -292,8 +230,25 @@ async function loadData() {
       fetch(API_ORGS,  { headers: { Accept: "application/vnd.github+json" }})
     ]);
 
-    allRepos   = (await repoRes.json()).filter(r => !r.disabled);
+    const userRepos = (await repoRes.json()).filter(r => !r.disabled);
     publicOrgs = await orgRes.json();
+
+    const orgRepoPromises = publicOrgs.map(org =>
+      fetch(`https://api.github.com/orgs/${org.login}/repos?per_page=100`, {
+        headers: { Accept: "application/vnd.github+json" }
+      }).then(res => res.ok ? res.json() : [])
+    );
+
+    const orgRepos = (await Promise.all(orgRepoPromises))
+      .flat()
+      .filter(r => !r.disabled);
+
+    const repoMap = new Map();
+    [...userRepos, ...orgRepos].forEach(repo => {
+      repoMap.set(repo.full_name, repo);
+    });
+
+    allRepos = [...repoMap.values()];
 
     buildOrgaSelect(allRepos);
     render();
@@ -304,6 +259,7 @@ async function loadData() {
     els.loader.remove();
     els.error.hidden = false;
     els.error.textContent = "Daten konnten nicht geladen werden.";
+    console.error(err);
   }
 }
 
