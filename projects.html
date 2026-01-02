@@ -5,14 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Erik's Hub | Aktuelle Projekte</title>
   <meta name="description" content="Öffentliche GitHub-Repositories & aktuelle Projekte" />
+
   <link rel="stylesheet" href="css/projects.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
   <div class="background-grid"></div>
 
+  <!-- Header -->
   <header class="header">
     <div class="header-content">
       <span class="logo">ERIK'S HUB</span>
@@ -20,13 +23,26 @@
     </div>
   </header>
 
+  <!-- Main -->
   <main class="main">
     <section class="intro">
       <h1><span class="highlight">$</span> projects</h1>
-      <p>Alle öffentlichen Repositories von <span class="highlight">@ErikDevelopment</span> — automatisch geladen.</p>
+      <p>
+        Alle öffentlichen Repositories von
+        <span class="highlight">@ErikDevelopment</span> — automatisch geladen.
+      </p>
 
+      <!-- Controls -->
       <div class="controls">
-        <input id="search" class="input" type="search" placeholder="Repo suchen… (Name, Beschreibung, Sprache)" />
+        <!-- Search -->
+        <input
+          id="search"
+          class="input"
+          type="search"
+          placeholder="Repo suchen… (Name, Beschreibung, Sprache)"
+        />
+
+        <!-- Sort Select -->
         <div class="custom-select" id="sortSelect">
           <button class="select-trigger" type="button">
             <span>Zuletzt aktualisiert</span>
@@ -41,6 +57,22 @@
             <div data-value="name">Name</div>
           </div>
         </div>
+
+        <!-- Orga Select -->
+        <div class="custom-select" id="orgaSelect">
+          <button class="select-trigger" type="button">
+            <span>Alle Orgas</span>
+            <svg class="chevron" viewBox="0 0 24 24">
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+
+          <div class="select-menu" id="orgaMenu">
+            <!-- JS füllt Orgas -->
+          </div>
+        </div>
+
+        <!-- Hide Forks -->
         <label class="check">
           <input id="hideForks" type="checkbox" />
           <span class="custom-check"></span>
@@ -51,23 +83,28 @@
       <div class="stats" id="stats" aria-live="polite"></div>
     </section>
 
-    <section class="grid" id="grid" aria-live="polite">
-      <!-- JS rendert Cards hier rein -->
-    </section>
+    <!-- Grid -->
+    <section class="grid" id="grid" aria-live="polite"></section>
 
+    <!-- State -->
     <section class="state" id="state">
       <div class="loader" id="loader">
-        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
         <span class="loading-text">Lade Repositories…</span>
       </div>
+
       <div class="error" id="error" hidden></div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer class="footer">
     <p><span class="highlight">$</span> echo "Made with ❤️ and lots of ☕"</p>
   </footer>
 
+  <!-- Scripts -->
   <script src="js/projects.js"></script>
   <script src="js/easter-egg.js"></script>
 </body>

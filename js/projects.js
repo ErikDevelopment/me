@@ -2,7 +2,11 @@
    Config
 ======================= */
 const USERNAME = "ErikDevelopment";
-const API_URL = `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`;
+const API_REPOS = `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`;
+const API_ORGS  = `https://api.github.com/users/${USERNAME}/orgs`;
+
+let activeOrga = "ALL";
+let currentSort = "updated";
 
 /* =======================
    DOM Elements
@@ -17,21 +21,21 @@ const els = {
   sortSelect: document.getElementById("sortSelect"),
 };
 
+const orgaSelect = document.getElementById("orgaSelect");
+const orgaLabel  = orgaSelect.querySelector(".select-trigger span");
+const orgaMenu   = document.getElementById("orgaMenu");
+
 /* =======================
-   Custom Select (Sort)
+   Custom Select – Sort
 ======================= */
 const sortTrigger = els.sortSelect.querySelector(".select-trigger");
 const sortLabel = els.sortSelect.querySelector(".select-trigger span");
 const sortOptions = els.sortSelect.querySelectorAll(".select-menu div");
 
-let currentSort = "updated";
-
-// Open / Close
 sortTrigger.addEventListener("click", () => {
   els.sortSelect.classList.toggle("open");
 });
 
-// Select option
 sortOptions.forEach(option => {
   option.addEventListener("click", () => {
     currentSort = option.dataset.value;
@@ -45,7 +49,6 @@ sortOptions.forEach(option => {
   });
 });
 
-// Click outside → close
 document.addEventListener("click", e => {
   if (!els.sortSelect.contains(e.target)) {
     els.sortSelect.classList.remove("open");
@@ -53,20 +56,30 @@ document.addEventListener("click", e => {
 });
 
 /* =======================
+   Custom Select – Orga
+======================= */
+orgaSelect.querySelector(".select-trigger").addEventListener("click", () => {
+  orgaSelect.classList.toggle("open");
+});
+
+document.addEventListener("click", e => {
+  if (!orgaSelect.contains(e.target)) {
+    orgaSelect.classList.remove("open");
+  }
+});
+
+/* =======================
    State
 ======================= */
 let allRepos = [];
+let publicOrgs = [];
 
 /* =======================
    Helpers
 ======================= */
 function fmtDate(iso) {
   try {
-    return new Date(iso).toLocaleDateString("de-DE", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
+    return new Date(iso).toLocaleDateString("de-DE");
   } catch {
     return iso ?? "";
   }
@@ -82,38 +95,62 @@ function escapeHtml(str) {
 }
 
 function scoreRepo(repo) {
-  const stars = repo.stargazers_count || 0;
-  const forks = repo.forks_count || 0;
-  return stars * 2 + forks;
+  return (repo.stargazers_count || 0) * 2 + (repo.forks_count || 0);
+}
+
+function getRepoOrga(repo) {
+  return repo.owner?.login ?? "unknown";
+}
+
+/* =======================
+   Organization Select
+======================= */
+function buildOrgaSelect(repos) {
+  const orgas = ["ALL", ...new Set(repos.map(getRepoOrga))];
+
+  orgaMenu.innerHTML = orgas.map(o => `
+    <div data-orga="${o}">
+      ${o === "ALL" ? "Alle Organizations" : o}
+    </div>
+  `).join("");
+
+  orgaMenu.querySelectorAll("div").forEach(opt => {
+    opt.addEventListener("click", () => {
+      activeOrga = opt.dataset.orga;
+      orgaLabel.textContent = opt.textContent;
+      orgaSelect.classList.remove("open");
+      render();
+    });
+  });
 }
 
 /* =======================
    Filter + Sort
 ======================= */
 function getFilteredSorted() {
-  const q = (els.search.value || "").trim().toLowerCase();
-  const hideForks = els.hideForks.checked;
-
   let list = allRepos.slice();
+  const q = els.search.value.toLowerCase();
 
-  if (hideForks) {
+  if (activeOrga !== "ALL") {
+    list = list.filter(r => getRepoOrga(r) === activeOrga);
+  }
+
+  if (els.hideForks.checked) {
     list = list.filter(r => !r.fork);
   }
 
   if (q) {
-    list = list.filter(r => {
-      return (
-        (r.name || "").toLowerCase().includes(q) ||
-        (r.description || "").toLowerCase().includes(q) ||
-        (r.language || "").toLowerCase().includes(q)
-      );
-    });
+    list = list.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      (r.description || "").toLowerCase().includes(q) ||
+      (r.language || "").toLowerCase().includes(q)
+    );
   }
 
   if (currentSort === "name") {
-    list.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    list.sort((a, b) => a.name.localeCompare(b.name));
   } else if (currentSort === "stars") {
-    list.sort((a, b) => (b.stargazers_count || 0) - (a.stargazers_count || 0));
+    list.sort((a, b) => b.stargazers_count - a.stargazers_count);
   } else {
     list.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
   }
@@ -125,89 +162,148 @@ function getFilteredSorted() {
    Render
 ======================= */
 function render() {
-  const list = getFilteredSorted();
+  const repos = getFilteredSorted();
 
   els.stats.textContent =
-    `${list.length} Repos angezeigt` +
-    (list.length !== allRepos.length ? ` (von ${allRepos.length})` : "");
+    `${repos.length} Repos angezeigt (gesamt ${allRepos.length})`;
 
-  if (list.length === 0) {
-    els.grid.innerHTML = `
-      <div class="error">
-        Keine Treffer. Versuch andere Suche oder deaktivier „Forks ausblenden“.
-      </div>
-    `;
-    return;
-  }
+  els.grid.innerHTML = `
+    ${renderOrgTiles()}
+    ${renderRepoTiles(repos)}
+  `;
+}
 
-  els.grid.innerHTML = list.map(repo => {
-    const name = escapeHtml(repo.name);
-    const desc = escapeHtml(repo.description || "Keine Beschreibung.");
-    const url = repo.html_url;
-    const lang = repo.language ? escapeHtml(repo.language) : "—";
-    const stars = repo.stargazers_count || 0;
-    const forks = repo.forks_count || 0;
-    const updated = fmtDate(repo.updated_at);
-    const isFork = repo.fork;
-    const featured = scoreRepo(repo) >= 10;
-
+/* =======================
+   Render – Organizations
+======================= */
+function renderOrgTiles() {
+  // Fallback: User-Profil
+  if (!publicOrgs || publicOrgs.length === 0) {
     return `
-      <a class="card" href="${url}" target="_blank" rel="noopener noreferrer">
-        <div class="card-top">
-          <div class="title">${name}</div>
-          <div class="badge ${featured ? "primary" : ""}">
-            ${featured ? "featured" : "repo"}
-          </div>
+      <a
+        class="card"
+        href="https://github.com/${USERNAME}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="card-top" style="gap:.75rem;">
+          <img
+            src="https://github.com/${USERNAME}.png"
+            alt="${USERNAME}"
+            style="width:32px;height:32px;border-radius:50%;"
+          />
+          <div class="title">${USERNAME}</div>
+          <div class="badge primary">profile</div>
         </div>
 
-        <div class="desc">${desc}</div>
-
-        <div class="badges">
-          <span class="badge">${lang}</span>
-          <span class="badge">★ ${stars}</span>
-          <span class="badge">⑂ ${forks}</span>
-          ${isFork ? `<span class="badge">fork</span>` : ``}
+        <div class="desc">
+          Persönliches GitHub-Profil
         </div>
 
         <div class="meta">
-          <span>updated: ${updated}</span>
-          <span class="sep">•</span>
-          <span class="highlight">Open →</span>
+          <span class="highlight">Open Profile →</span>
+        </div>
+      </a>
+    `;
+  }
+
+  // Normale Orga-Kacheln
+  return publicOrgs.map(org => {
+    const url = org.html_url || `https://github.com/${org.login}`;
+
+    return `
+      <a
+        class="card"
+        href="${url}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="card-top" style="gap:.75rem;">
+          <img
+            src="${org.avatar_url}"
+            alt="${org.login}"
+            style="width:32px;height:32px;border-radius:50%;"
+          />
+          <div class="title">${org.login}</div>
+          <div class="badge primary">organization</div>
+        </div>
+
+        <div class="desc">
+          ${org.description || "Öffentliche GitHub Organization"}
+        </div>
+
+        <div class="meta">
+          <span class="highlight">Open Organization →</span>
         </div>
       </a>
     `;
   }).join("");
 }
 
+
 /* =======================
-   Load Repos
+   Render – Repos
 ======================= */
-async function loadRepos() {
-  els.loader.hidden = false;
-  els.error.hidden = true;
+function renderRepoTiles(repos) {
+  if (!repos.length) {
+    return `
+      <div class="error">
+        Keine Treffer. Filter oder Suche anpassen.
+      </div>
+    `;
+  }
 
+  return repos.map(repo => `
+    <a class="card" href="${repo.html_url}" target="_blank">
+      <div class="card-top">
+        <div class="title">${escapeHtml(repo.name)}</div>
+        <div class="badge ${scoreRepo(repo) >= 10 ? "primary" : ""}">
+          ${getRepoOrga(repo)}
+        </div>
+      </div>
+
+      <div class="desc">
+        ${escapeHtml(repo.description || "Keine Beschreibung.")}
+      </div>
+
+      <div class="badges">
+        <span class="badge">${repo.language || "—"}</span>
+        <span class="badge">★ ${repo.stargazers_count}</span>
+        <span class="badge">⑂ ${repo.forks_count}</span>
+        ${repo.fork ? `<span class="badge">fork</span>` : ``}
+      </div>
+
+      <div class="meta">
+        <span>updated: ${fmtDate(repo.updated_at)}</span>
+        <span class="sep">•</span>
+        <span class="highlight">Open →</span>
+      </div>
+    </a>
+  `).join("");
+}
+
+/* =======================
+   Load Data
+======================= */
+async function loadData() {
   try {
-    const res = await fetch(API_URL, {
-      headers: { Accept: "application/vnd.github+json" },
-    });
+    const [repoRes, orgRes] = await Promise.all([
+      fetch(API_REPOS, { headers: { Accept: "application/vnd.github+json" }}),
+      fetch(API_ORGS,  { headers: { Accept: "application/vnd.github+json" }})
+    ]);
 
-    if (!res.ok) {
-      throw new Error(`GitHub API Error ${res.status}`);
-    }
+    allRepos   = (await repoRes.json()).filter(r => !r.disabled);
+    publicOrgs = await orgRes.json();
 
-    const repos = await res.json();
-    allRepos = repos.filter(r => !r.disabled);
-
+    buildOrgaSelect(allRepos);
     render();
 
-    els.loader.style.opacity = "0";
-    setTimeout(() => els.loader.remove(), 300);
+    els.loader.remove();
 
   } catch (err) {
-    els.loader.hidden = true;
+    els.loader.remove();
     els.error.hidden = false;
-    els.error.textContent =
-      `Konnte Repositories nicht laden. (${err.message})`;
+    els.error.textContent = "Daten konnten nicht geladen werden.";
   }
 }
 
@@ -220,4 +316,4 @@ els.hideForks.addEventListener("change", render);
 /* =======================
    Init
 ======================= */
-loadRepos();
+loadData();
