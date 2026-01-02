@@ -170,3 +170,90 @@ body {
 .highlight {
   color: var(--primary);
 }
+
+/* Blog Content (aus JSON gerendert) */
+.content {
+  margin-bottom: 1rem;
+}
+
+.content p {
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.75rem;
+}
+
+.content ul {
+  margin: 0.5rem 0 0.75rem 1.2rem;
+}
+
+.content li {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+/* Tag Filter */
+.tag-filter {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.tag-filter button {
+  font-family: inherit;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tag-filter button.active,
+.tag-filter button:hover {
+  background: var(--primary);
+  color: var(--bg);
+  box-shadow: var(--glow);
+}
+
+/* Read more */
+.read-more {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--primary);
+  cursor: pointer;
+}
+
+/* Animated Content */
+.blog-card .content {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition:
+    max-height 0.45s ease,
+    opacity 0.35s ease;
+}
+
+/* Expanded State */
+.blog-card.expanded .content {
+  max-height: 1000px; /* ausreichend groß */
+  opacity: 1;
+}
+
+/* Read more hover polish */
+.read-more {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  margin-bottom: 0.6rem;
+  color: var(--primary);
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.read-more:hover {
+  transform: translateX(4px);
+  opacity: 0.85;
+}

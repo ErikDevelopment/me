@@ -1,0 +1,83 @@
+{
+  "posts": [
+    {
+      "id": "java-to-python-discord-bots",
+      "tag": "DEV",
+      "title": "Wie ich mit Java angefangen habe und bei Python gelandet bin",
+      "excerpt": "Mein Einstieg in die Entwicklung über Discord-Bots, warum Java mein Startpunkt war und weshalb ich später zu Python gewechselt bin.",
+      "date": "2025-03-20",
+      "content": [
+        "Mein Einstieg in die Programmierung kam nicht über Schule oder Uni, sondern über Discord.",
+        "Ich wollte verstehen, wie Bots funktionieren – Commands, Events, Reaktionen. Also habe ich mit Java angefangen.",
+        {
+          "type": "list",
+          "title": "Warum Java am Anfang:",
+          "items": [
+            "klare Struktur und Typisierung",
+            "gutes Verständnis für Klassen und OOP",
+            "saubere Trennung von Logik"
+          ]
+        },
+        "Mit der Zeit habe ich gemerkt, dass Java für schnelle Ideen und Prototypen oft zu schwergewichtig ist.",
+        "Für neue Bots und kleinere Services bin ich deshalb zu Python gewechselt.",
+        {
+          "type": "list",
+          "title": "Warum später Python:",
+          "items": [
+            "schnelleres Umsetzen von Ideen",
+            "weniger Boilerplate",
+            "starkes Ökosystem für APIs und Automatisierung"
+          ]
+        },
+        "Der Wechsel war kein Rückschritt – im Gegenteil. Das Java-Fundament hat mir geholfen, Python sauber und strukturiert einzusetzen."
+      ]
+    },
+    {
+      "id": "backend-learning-journey",
+      "tag": "BACKEND",
+      "title": "Was ich im Hintergrund gelernt habe: Datenbanken, Server & Pipelines",
+      "excerpt": "Nebenbei habe ich mich intensiv mit Backend-Themen beschäftigt – oft unsichtbar, aber extrem wichtig.",
+      "date": "2025-03-18",
+      "content": [
+        "Während ich an Bots und kleinen Tools gearbeitet habe, bin ich automatisch tiefer ins Backend gerutscht.",
+        "Daten mussten gespeichert werden, Server mussten laufen und Dinge sollten zuverlässig funktionieren.",
+        {
+          "type": "list",
+          "title": "Themen, mit denen ich mich beschäftigt habe:",
+          "items": [
+            "Datenbanken & Datenmodelle",
+            "Server-Strukturen und Services",
+            "APIs und Schnittstellen",
+            "Deployment und einfache Pipelines"
+          ]
+        },
+        "Vieles davon lernt man nicht durch Tutorials, sondern durch Probleme.",
+        "Wenn etwas nachts nicht läuft oder Daten verloren gehen, versteht man sehr schnell, warum saubere Strukturen wichtig sind.",
+        "Diese Erfahrungen prägen heute stark, wie ich Code plane und umsetze."
+      ]
+    },
+    {
+      "id": "webdev-in-apprenticeship",
+      "tag": "WEB",
+      "title": "Webentwicklung in meiner Ausbildung – und nebenbei",
+      "excerpt": "In meiner Ausbildung kam Webentwicklung dazu – und plötzlich hat alles zusammengepasst.",
+      "date": "2025-03-15",
+      "content": [
+        "In meiner Ausbildung habe ich angefangen, Websites zu bauen – sowohl für interne Zwecke als auch für kleinere Projekte.",
+        "HTML, CSS und JavaScript waren plötzlich nicht mehr nur Beiwerk, sondern ein fester Bestandteil.",
+        {
+          "type": "list",
+          "title": "Was dabei zusammenkam:",
+          "items": [
+            "Frontend-Design und UX",
+            "saubere Strukturierung von Code",
+            "Verbindung von Frontend und Backend",
+            "echte Anforderungen statt Demo-Projekte"
+          ]
+        },
+        "Viele Dinge, die ich vorher separat gelernt hatte, sind hier zusammengeflossen.",
+        "Genau deshalb baue ich Projekte wie meinen eigenen Hub oder diesen Blog – um das Gesamtbild zu zeigen, nicht nur einzelne Technologien."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "blog": [
+    "echo \"write what you learn\"",
+    "echo \"code is a diary\"",
+    "echo \"learning never ships finished\"",
+    "echo \"explain it to understand it\"",
+    "echo \"blogging > forgetting\"",
+    "echo \"thoughts become clearer when written\"",
+    "echo \"documenting is part of development\"",
+    "echo \"learning happens between commits\"",
+    "echo \"writing forces clarity\"",
+    "echo \"code is temporary, understanding lasts\""
+  ],
+  "projects": [
+    "echo \"build things\"",
+    "echo \"working code beats slides\"",
+    "echo \"side projects matter\"",
+    "echo \"ideas are cheap, execution isn’t\"",
+    "echo \"commit early, commit often\"",
+    "echo \"shipping teaches more than planning\"",
+    "echo \"real projects reveal real problems\"",
+    "echo \"done is better than perfect\"",
+    "echo \"prototypes beat opinions\"",
+    "echo \"every project is a lesson\""
+  ],
+  "hub": [
+    "echo \"write clean code\"",
+    "echo \"less magic, more logic\"",
+    "echo \"automation beats repetition\"",
+    "echo \"readable > clever\"",
+    "echo \"ship > perfect\"",
+    "echo \"understand before optimizing\"",
+    "echo \"simple scales better\"",
+    "echo \"clarity over complexity\"",
+    "echo \"tools change, fundamentals stay\"",
+    "echo \"build systems you trust\""
+  ],
+  "default": [
+    "echo \"code > talk\"",
+    "echo \"keep it simple\"",
+    "echo \"learn by building\"",
+    "echo \"curiosity drives progress\"",
+    "echo \"small steps compound\"",
+    "echo \"focus beats motivation\"",
+    "echo \"consistency over intensity\"",
+    "echo \"understanding beats shortcuts\""
+  ]
+}

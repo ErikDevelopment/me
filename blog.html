@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Erik's Blog</title>
   <meta name="description" content="Tech Blog über Web, Code & Projekte" />
+
   <link rel="stylesheet" href="css/blog.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +23,6 @@
     </div>
   </header>
 
-
   <!-- Main -->
   <main class="container">
 
@@ -35,115 +35,15 @@
       </p>
     </section>
 
+    <!-- Tag Filter -->
+    <div class="tag-filter" id="tagFilter"></div>
+
     <!-- Blog Grid -->
-    <section class="blog-grid">
+    <section class="blog-grid" id="blogGrid"></section>
 
-      <!-- Post 1 -->
-      <article class="blog-card">
-        <span class="tag">CSS</span>
-        <h2>Warum ich kein Tailwind im Portfolio nutze</h2>
-        <p class="excerpt">
-          Tailwind ist mächtig – aber für mein Portfolio bewusst nicht meine erste Wahl.
-          Ich erkläre, warum klassisches CSS hier besser passt.
-        </p>
-
-        <div class="content">
-          <p>
-            Tailwind CSS ist ohne Frage ein starkes Tool.  
-            Für große Projekte, Teams und schnelle Prototypen spart es extrem viel Zeit.
-          </p>
-          <p>
-            In meinem Portfolio wollte ich jedoch zeigen, dass ich:
-          </p>
-          <ul>
-            <li>CSS wirklich verstehe</li>
-            <li>Layouts selbst aufbauen kann</li>
-            <li>Animationen & Effekte gezielt einsetze</li>
-          </ul>
-          <p>
-            Außerdem bleibt der Code übersichtlicher, wenn es um Design-Feintuning geht.
-            Tailwind nutze ich weiterhin – aber nicht überall.
-          </p>
-        </div>
-
-        <div class="meta">
-          <span>📅 12.03.2025</span>
-        </div>
-      </article>
-
-      <!-- Post 2 -->
-      <article class="blog-card">
-        <span class="tag">DEV</span>
-        <h2>Mein Setup als Full-Stack Entwickler</h2>
-        <p class="excerpt">
-          Tools, Editor, Terminal & kleine Tweaks, die meinen Alltag einfacher machen.
-        </p>
-
-        <div class="content">
-          <p>
-            Ein gutes Setup macht keinen schlechten Code gut –  
-            aber es hilft enorm beim Fokus.
-          </p>
-
-          <p><strong>Mein aktuelles Setup:</strong></p>
-          <ul>
-            <li>Editor: VS Code (minimal, wenig Extensions)</li>
-            <li>Font: JetBrains Mono</li>
-            <li>Terminal: Zsh + Oh My Zsh</li>
-            <li>OS: Linux</li>
-          </ul>
-
-          <p>
-            Ich halte mein Setup bewusst simpel.  
-            Weniger Ablenkung = mehr Konzentration auf das Problem.
-          </p>
-        </div>
-
-        <div class="meta">
-          <span>📅 02.03.2025</span>
-        </div>
-      </article>
-
-      <!-- Post 3 -->
-      <article class="blog-card">
-        <span class="tag">PROJECT</span>
-        <h2>Von Idee zu Projekt: Mein Linktree</h2>
-        <p class="excerpt">
-          Wie aus einer simplen Idee ein persönlicher Developer-Hub wurde.
-        </p>
-
-        <div class="content">
-          <p>
-            Ich wollte keinen generischen Linktree.
-            Also habe ich mir einen eigenen gebaut.
-          </p>
-
-          <p>
-            Ziele:
-          </p>
-          <ul>
-            <li>Eigenes Design</li>
-            <li>Klare Struktur</li>
-            <li>GitHub API Integration</li>
-            <li>Performance & Clean Code</li>
-          </ul>
-
-          <p>
-            Während der Entwicklung sind viele kleine Probleme aufgetaucht:
-            CSS-Layering, Overlays, Mobile Spacing.
-          </p>
-
-          <p>
-            Genau diese Dinge machen Projekte wertvoll –  
-            weil man daran wächst.
-          </p>
-        </div>
-
-        <div class="meta">
-          <span>📅 25.02.2025</span>
-        </div>
-      </article>
-
+    <!-- Blog Grid (wird per JS gefüllt) -->
+    <section class="blog-grid" id="blogGrid">
+      
     </section>
 
   </main>
@@ -152,6 +52,7 @@
     <p><span class="highlight">$</span> echo "write clean code"</p>
   </footer>
 
+  <script src="js/blog.js"></script>
   <script src="js/easter-egg.js"></script>
 </body>
 </html>
