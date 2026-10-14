@@ -1,82 +1,4 @@
-/* Theme Variables */
-:root {
-  --bg: #0a0f14;
-  --bg-card: #111820;
-  --text: #e8fff5;
-  --text-muted: #6b8f7a;
-  --primary: #22c55e;
-  --border: #1e3a28;
-  --glow: 0 0 20px rgba(34,197,94,0.4);
-}
-
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Base */
-body {
-  font-family: 'JetBrains Mono', monospace;
-  background: linear-gradient(180deg, var(--bg), #050809);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-/* Background Grid */
-.background-grid {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(34,197,94,0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34,197,94,0.08) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Header */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  background: rgba(10, 15, 20, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-
-.header-content {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  font-weight: 700;
-}
-
-/* Back Button */
-.back-btn {
-  padding: 0.5rem 1.5rem;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  color: var(--text);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-  background: var(--bg-card);
-  border-color: var(--primary);
-  box-shadow: var(--glow);
-}
+/* Blog – benötigt base.css */
 
 /* Layout */
 .container {
@@ -155,22 +77,6 @@ body {
   color: var(--text-muted);
 }
 
-.read {
-  color: var(--primary);
-}
-
-/* Footer */
-.footer {
-  text-align: center;
-  padding: 3rem 0;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
-
-.highlight {
-  color: var(--primary);
-}
-
 /* Blog Content (aus JSON gerendert) */
 .content {
   margin-bottom: 1rem;
@@ -201,6 +107,7 @@ body {
 }
 
 .tag-filter button {
+  position: relative;
   font-family: inherit;
   font-size: 0.7rem;
   padding: 0.3rem 0.7rem;
@@ -212,6 +119,14 @@ body {
   transition: all 0.2s ease;
 }
 
+/* größere Tippfläche, optisch unverändert */
+.tag-filter button::after,
+button.read-more::after {
+  content: "";
+  position: absolute;
+  inset: -8px -4px;
+}
+
 .tag-filter button.active,
 .tag-filter button:hover {
   background: var(--primary);
@@ -221,33 +136,13 @@ body {
 
 /* Read more */
 .read-more {
-  margin-top: 0.75rem;
+  position: relative;
+  margin: 0.75rem 0 0.6rem;
+  padding: 0;
+  background: none;
+  border: 0;
+  font: inherit;
   font-size: 0.75rem;
-  color: var(--primary);
-  cursor: pointer;
-}
-
-/* Animated Content */
-.blog-card .content {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition:
-    max-height 0.45s ease,
-    opacity 0.35s ease;
-}
-
-/* Expanded State */
-.blog-card.expanded .content {
-  max-height: 1000px; /* ausreichend groß */
-  opacity: 1;
-}
-
-/* Read more hover polish */
-.read-more {
-  margin-top: 0.75rem;
-  font-size: 0.75rem;
-  margin-bottom: 0.6rem;
   color: var(--primary);
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -256,4 +151,39 @@ body {
 .read-more:hover {
   transform: translateX(4px);
   opacity: 0.85;
+}
+
+/* Animated Content (0fr → 1fr klappt jede Höhe auf) */
+.blog-card .content {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-bottom: 0;
+  transition:
+    grid-template-rows 0.45s ease,
+    opacity 0.35s ease,
+    margin-bottom 0.45s ease;
+}
+
+.blog-card .content-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Expanded State */
+.blog-card.expanded .content {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-bottom: 1rem;
+}
+
+/* Permalink */
+.meta a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.meta a:hover {
+  color: var(--primary);
 }

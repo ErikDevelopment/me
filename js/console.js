@@ -27,6 +27,9 @@ const script = [
   { cmd: "exit", out: "Session closed. Thanks for visiting 👋" }
 ];
 
+/* Reduced Motion → alles sofort ausgeben */
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
 /* State */
 let line = 0;
 let char = 0;
@@ -44,6 +47,7 @@ function resetTerminal() {
 /* Typing Logic */
 function typeCommand() {
   if (line >= script.length) return;
+  if (reduceMotion) return printAll();
 
   const entry = script[line];
 
@@ -78,6 +82,23 @@ function typeCommand() {
 
   // Auto-scroll
   terminal.scrollTop = terminal.scrollHeight;
+}
+
+/* Ohne Animation: alle Zeilen auf einmal */
+function printAll() {
+  script.forEach(entry => {
+    const el = document.createElement("div");
+    el.className = "line";
+    el.innerHTML = `<span class="prompt">$</span> <span class="cmd"></span>`;
+    el.querySelector(".cmd").textContent = entry.cmd;
+
+    const out = document.createElement("div");
+    out.className = "output";
+    out.textContent = entry.out;
+
+    terminal.append(el, out);
+  });
+  line = script.length;
 }
 
 /* Restart Button */

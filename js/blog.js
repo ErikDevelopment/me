@@ -50,8 +50,13 @@ function renderTagFilter() {
   const tags = ["ALL", ...new Set(allPosts.map(p => p.tag))];
 
   tagFilterEl.innerHTML = tags.map(tag => `
-    <button class="${tag === activeTag ? "active" : ""}" data-tag="${tag}">
-      ${tag}
+    <button
+      type="button"
+      class="${tag === activeTag ? "active" : ""}"
+      aria-pressed="${tag === activeTag}"
+      data-tag="${escapeHtml(tag)}"
+    >
+      ${escapeHtml(tag)}
     </button>
   `).join("");
 
@@ -77,25 +82,37 @@ function renderPosts() {
     return;
   }
 
-  grid.innerHTML = posts.map(post => `
-    <article class="blog-card">
-      <span class="tag">${post.tag}</span>
-      <h2>${post.title}</h2>
-      <p class="excerpt">${post.excerpt ?? ""}</p>
+  grid.innerHTML = posts.map(post => {
+    const id = escapeHtml(post.id);
 
-      <div class="content">
-        ${renderMarkdown(post.content)}
-      </div>
+    return `
+      <article class="blog-card">
+        <span class="tag">${escapeHtml(post.tag)}</span>
+        <h2>${escapeHtml(post.title)}</h2>
+        <p class="excerpt">${escapeHtml(post.excerpt)}</p>
 
-      <div class="read-more" data-id="${post.id}">
-        Weiterlesen →
-      </div>
+        <div class="content" id="content-${id}">
+          <div class="content-inner">
+            ${renderMarkdown(post.content)}
+          </div>
+        </div>
 
-      <div class="meta">
-        <span>📅 ${formatDate(post.date)}</span>
-      </div>
-    </article>
-  `).join("");
+        <button
+          type="button"
+          class="read-more"
+          aria-expanded="false"
+          aria-controls="content-${id}"
+        >
+          Weiterlesen →
+        </button>
+
+        <div class="meta">
+          <span>📅 ${formatDate(post.date)}</span>
+          <a href="?post=${encodeURIComponent(post.id)}" title="Direktlink zu diesem Post">🔗 Permalink</a>
+        </div>
+      </article>
+    `;
+  }).join("");
 
   setupReadMore();
 }
@@ -105,19 +122,22 @@ function renderPosts() {
 ======================= */
 function renderSinglePost(post) {
   tagFilterEl.innerHTML = "";
+  document.title = `${post.title} | Erik's Blog`;
 
   grid.innerHTML = `
-    <article class="blog-card">
-      <span class="tag">${post.tag}</span>
-      <h2>${post.title}</h2>
+    <article class="blog-card expanded">
+      <span class="tag">${escapeHtml(post.tag)}</span>
+      <h2>${escapeHtml(post.title)}</h2>
 
       <div class="content">
-        ${renderMarkdown(post.content)}
+        <div class="content-inner">
+          ${renderMarkdown(post.content)}
+        </div>
       </div>
 
       <div class="meta">
         <span>📅 ${formatDate(post.date)}</span>
-        <a class="read-more" href="blog.html">← zurück</a>
+        <a class="read-more" href="blog.html">← alle Posts</a>
       </div>
     </article>
   `;
@@ -127,11 +147,12 @@ function renderSinglePost(post) {
    Read More
 ======================= */
 function setupReadMore() {
-  grid.querySelectorAll(".read-more").forEach(btn => {
+  grid.querySelectorAll("button.read-more").forEach(btn => {
     btn.onclick = () => {
       const card = btn.closest(".blog-card");
       const expanded = card.classList.toggle("expanded");
 
+      btn.setAttribute("aria-expanded", expanded);
       btn.textContent = expanded
         ? "Weniger anzeigen"
         : "Weiterlesen →";
@@ -152,9 +173,9 @@ function renderMarkdown(blocks = []) {
       return `<p>${inlineMarkdown(b)}</p>`;
     }
 
-    if (b.type === "list") {
+    if (b.type === "list" && Array.isArray(b.items)) {
       return `
-        ${b.title ? `<p><strong>${b.title}</strong></p>` : ""}
+        ${b.title ? `<p><strong>${escapeHtml(b.title)}</strong></p>` : ""}
         <ul>${b.items.map(i => `<li>${inlineMarkdown(i)}</li>`).join("")}</ul>
       `;
     }
@@ -163,8 +184,9 @@ function renderMarkdown(blocks = []) {
   }).join("");
 }
 
+// Erst escapen, dann Markdown – so bleibt eingebettetes HTML wirkungslos
 function inlineMarkdown(text) {
-  return text
+  return escapeHtml(text)
     .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
     .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(/`(.+?)`/g, "<code>$1</code>");
@@ -173,18 +195,24 @@ function inlineMarkdown(text) {
 /* =======================
    Helpers
 ======================= */
+function escapeHtml(str) {
+  return String(str ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
 function formatDate(date) {
-  try {
-    return new Date(date).toLocaleDateString("de-DE");
-  } catch {
-    return date ?? "—";
-  }
+  const d = new Date(date);
+  return isNaN(d) ? escapeHtml(date ?? "—") : d.toLocaleDateString("de-DE");
 }
 
 function renderMessage(msg) {
   grid.innerHTML = `
     <article class="blog-card">
-      <p class="excerpt">${msg}</p>
+      <p class="excerpt">${escapeHtml(msg)}</p>
     </article>
   `;
 }

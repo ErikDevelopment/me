@@ -6,10 +6,26 @@
   <title>Erik's Hub | Aktuelle Projekte</title>
   <meta name="description" content="Öffentliche GitHub-Repositories & aktuelle Projekte" />
 
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://erikdevelopment.github.io/me/projects.html">
+  <meta name="theme-color" content="#0a0f14">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Erik's Hub">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:url" content="https://erikdevelopment.github.io/me/projects.html">
+  <meta property="og:title" content="Erik&#x27;s Hub | Aktuelle Projekte">
+  <meta property="og:description" content="Öffentliche GitHub-Repositories &amp; aktuelle Projekte">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/105929625?s=400">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Erik&#x27;s Hub | Aktuelle Projekte">
+  <meta name="twitter:description" content="Öffentliche GitHub-Repositories &amp; aktuelle Projekte">
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/105929625?s=400">
+
+  <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/projects.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -39,35 +55,37 @@
           id="search"
           class="input"
           type="search"
-          placeholder="Repo suchen… (Name, Beschreibung, Sprache)"
+          placeholder="Repo suchen…"
+          aria-label="Repositories durchsuchen (Name, Beschreibung, Sprache)"
+          title="Sucht in Name, Beschreibung und Sprache"
         />
 
         <!-- Sort Select -->
         <div class="custom-select" id="sortSelect">
-          <button class="select-trigger" type="button">
-            <span>Zuletzt aktualisiert</span>
-            <svg class="chevron" viewBox="0 0 24 24">
+          <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Sortierung">
+            <span>Aktualisiert</span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
               <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
 
-          <div class="select-menu">
-            <div data-value="updated">Zuletzt aktualisiert</div>
-            <div data-value="stars">Stars</div>
-            <div data-value="name">Name</div>
+          <div class="select-menu" role="listbox" aria-label="Sortierung">
+            <div role="option" tabindex="-1" data-value="updated" aria-selected="true" class="active">Aktualisiert</div>
+            <div role="option" tabindex="-1" data-value="stars" aria-selected="false">Stars</div>
+            <div role="option" tabindex="-1" data-value="name" aria-selected="false">Name</div>
           </div>
         </div>
 
         <!-- Orga Select -->
         <div class="custom-select" id="orgaSelect">
-          <button class="select-trigger" type="button">
-            <span>Alle Orgas</span>
-            <svg class="chevron" viewBox="0 0 24 24">
+          <button class="select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-label="Organisation">
+            <span>Alle Repos</span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
               <polyline points="6 9 12 15 18 9" />
             </svg>
           </button>
 
-          <div class="select-menu" id="orgaMenu">
+          <div class="select-menu" id="orgaMenu" role="listbox" aria-label="Organisation">
             <!-- JS füllt Orgas -->
           </div>
         </div>

@@ -5,11 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Erik's Hub | Portfolio</title>
   <meta name="description" content="Full-Stack Entwickler aus Deutschland. Skills, Tools und Projekte.">
+
+  <link rel="icon" href="assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="canonical" href="https://erikdevelopment.github.io/me/portfolio.html">
+  <meta name="theme-color" content="#0a0f14">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Erik's Hub">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:url" content="https://erikdevelopment.github.io/me/portfolio.html">
+  <meta property="og:title" content="Erik&#x27;s Hub | Portfolio">
+  <meta property="og:description" content="Full-Stack Entwickler aus Deutschland. Skills, Tools und Projekte.">
+  <meta property="og:image" content="https://avatars.githubusercontent.com/u/105929625?s=400">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Erik&#x27;s Hub | Portfolio">
+  <meta name="twitter:description" content="Full-Stack Entwickler aus Deutschland. Skills, Tools und Projekte.">
+  <meta name="twitter:image" content="https://avatars.githubusercontent.com/u/105929625?s=400">
+  <link rel="preload" href="assets/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/portfolio.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.17.0/devicon.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- Background Grid -->
@@ -32,10 +47,10 @@
        <div class="card-icon avatar-icon">
         <!-- Profilbild -->
         <img
-          src="https://avatars.githubusercontent.com/u/105929625?s=400"
-          width="400" height="400"
+          src="https://avatars.githubusercontent.com/u/105929625?s=240"
+          width="240" height="240"
           decoding="async"
-          alt="GitHub Avatar"
+          alt="Profilbild von Erik"
           class="avatar-img"
         >
 
@@ -44,7 +59,7 @@
           src="assets/images/avatar.webp"
           width="288" height="288"
           decoding="async"
-          alt="Cat"
+          alt=""
           class="cat-overlay"
         >
       </div>
@@ -55,7 +70,7 @@
       <!-- Linktree Card -->
       <a href="linktree.html" class="bento-card bento-card-link">
         <div class="card-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
             <polyline points="15 3 21 3 21 9"></polyline>
             <line x1="10" y1="14" x2="21" y2="3"></line>
@@ -64,7 +79,7 @@
         <p class="card-subtitle">LEARN MORE ABOUT ME</p>
         <div class="card-title-row">
           <h2 class="card-title">Linktree</h2>
-          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg aria-hidden="true" class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
@@ -74,14 +89,14 @@
       <!-- GitHub Card -->
       <a href="https://github.com/ErikDevelopment" target="_blank" rel="noopener noreferrer" class="bento-card bento-card-link">
         <div class="card-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
           </svg>
         </div>
         <p class="card-subtitle">OFFICIAL GITHUB PAGE</p>
         <div class="card-title-row">
           <h2 class="card-title">GitHub</h2>
-          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg aria-hidden="true" class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
@@ -91,20 +106,20 @@
       <!-- Skills Card -->
       <article class="bento-card">
         <div class="skill-icons">
-          <div class="skill-icon" title="React">
-            <i class="devicon-react-original"></i>
+          <div class="skill-icon" title="React" role="img" aria-label="React">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#react"></use></svg>
           </div>
-          <div class="skill-icon" title="JavaScript">
-            <i class="devicon-javascript-plain"></i>
+          <div class="skill-icon" title="JavaScript" role="img" aria-label="JavaScript">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#javascript"></use></svg>
           </div>
-          <div class="skill-icon" title="TypeScript">
-            <i class="devicon-typescript-plain"></i>
+          <div class="skill-icon" title="TypeScript" role="img" aria-label="TypeScript">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#typescript"></use></svg>
           </div>
-          <div class="skill-icon" title="Python">
-            <i class="devicon-python-plain"></i>
+          <div class="skill-icon" title="Python" role="img" aria-label="Python">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#python"></use></svg>
           </div>
-          <div class="skill-icon" title="HTML5">
-            <i class="devicon-html5-plain"></i>
+          <div class="skill-icon" title="HTML5" role="img" aria-label="HTML5">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#html5"></use></svg>
           </div>
         </div>
         <p class="card-description">React, Bootstrap, HTML5, JavaScript, Java, Python, Bash, ...</p>
@@ -114,17 +129,17 @@
       <!-- Tools Card -->
       <article class="bento-card">
         <div class="skill-icons">
-          <div class="skill-icon" title="Git">
-            <i class="devicon-git-plain"></i>
+          <div class="skill-icon" title="Git" role="img" aria-label="Git">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#git"></use></svg>
           </div>
-          <div class="skill-icon" title="Docker">
-            <i class="devicon-docker-plain"></i>
+          <div class="skill-icon" title="Docker" role="img" aria-label="Docker">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#docker"></use></svg>
           </div>
-          <div class="skill-icon" title="Linux">
-            <i class="devicon-linux-plain"></i>
+          <div class="skill-icon" title="Linux" role="img" aria-label="Linux">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#linux"></use></svg>
           </div>
-          <div class="skill-icon" title="Nginx">
-            <i class="devicon-nginx-original"></i>
+          <div class="skill-icon" title="Nginx" role="img" aria-label="Nginx">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#nginx"></use></svg>
           </div>
         </div>
         <p class="card-description">Git, Docker, Arduino, Linux, Jenkins, Nginx, Raspberry Pi, Azure, ...</p>
@@ -134,14 +149,14 @@
       <!-- Databases Card -->
       <article class="bento-card">
         <div class="skill-icons">
-          <div class="skill-icon" title="MongoDB">
-            <i class="devicon-mongodb-plain"></i>
+          <div class="skill-icon" title="MongoDB" role="img" aria-label="MongoDB">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#mongodb"></use></svg>
           </div>
-          <div class="skill-icon" title="MySQL">
-            <i class="devicon-mysql-plain"></i>
+          <div class="skill-icon" title="MySQL" role="img" aria-label="MySQL">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#mysql"></use></svg>
           </div>
-          <div class="skill-icon" title="PostgreSQL">
-            <i class="devicon-postgresql-plain"></i>
+          <div class="skill-icon" title="PostgreSQL" role="img" aria-label="PostgreSQL">
+            <svg aria-hidden="true"><use href="assets/images/skills.svg#postgresql"></use></svg>
           </div>
         </div>
         <p class="card-description">MongoDB, Maria DB, MySQL, PostgreSQL, InfluxDB, ...</p>

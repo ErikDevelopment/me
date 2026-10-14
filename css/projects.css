@@ -1,86 +1,4 @@
-/* Theme Variables */
-:root {
-  --bg: #0a0f14;
-  --bg-card: #111820;
-  --text: #e8fff5;
-  --text-muted: #6b8f7a;
-  --primary: #22c55e;
-  --border: #1e3a28;
-  --glow: 0 0 20px rgba(34,197,94,0.4);
-  --glow-intense: 0 0 40px rgba(34,197,94,0.6);
-}
-
-/* Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Base */
-body {
-  font-family: "JetBrains Mono", monospace;
-  background: linear-gradient(180deg, var(--bg) 0%, #050809 100%);
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-/* Background Grid */
-.background-grid {
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(34,197,94,0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34,197,94,0.08) 1px, transparent 1px);
-  background-size: 60px 60px;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Header */
-.header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 50;
-  background: rgba(10, 15, 20, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
-}
-
-.header-content {
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  font-weight: 700;
-  font-size: 1.1rem;
-}
-
-/* Back Button */
-.back-btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid var(--border);
-  border-radius: 9999px;
-  color: var(--text);
-  text-decoration: none;
-  font-size: 0.875rem;
-  transition: all 0.3s ease;
-}
-
-.back-btn:hover {
-  background: var(--bg-card);
-  border-color: var(--primary);
-  box-shadow: var(--glow);
-}
+/* Projects – benötigt base.css */
 
 /* Main Layout */
 .main {
@@ -102,16 +20,18 @@ body {
   color: var(--text-muted);
 }
 
-.highlight {
-  color: var(--primary);
-}
-
 /* Controls */
 .controls {
   margin-top: 1.5rem;
   display: grid;
   gap: 0.75rem;
-  grid-template-columns: 1fr;
+  /* Handy: Suche oben, beide Selects nebeneinander, Checkbox darunter */
+  grid-template-columns: 1fr 1fr;
+}
+
+.controls .input,
+.controls .check {
+  grid-column: 1 / -1;
 }
 
 @media (min-width: 768px) {
@@ -119,10 +39,13 @@ body {
     grid-template-columns: 1fr 220px 180px;
     align-items: center;
   }
+
+  .controls .input {
+    grid-column: auto;
+  }
 }
 
-.input,
-.select {
+.input {
   width: 100%;
   padding: 0.9rem 1rem;
   border-radius: 0.75rem;
@@ -133,8 +56,7 @@ body {
   transition: all 0.3s ease;
 }
 
-.input:focus,
-.select:focus {
+.input:focus {
   border-color: rgba(34,197,94,0.7);
   box-shadow: var(--glow);
 }
@@ -193,10 +115,14 @@ body {
   box-shadow: var(--glow);
 }
 
+.check input:focus-visible + .custom-check {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 .check input:checked + .custom-check::after {
   transform: rotate(-45deg) scale(1);
 }
-
 
 /* Stats */
 .stats {
@@ -338,6 +264,7 @@ body {
 
 .custom-select {
   position: relative;
+  min-width: 0;
 }
 
 .select-trigger {
@@ -359,7 +286,22 @@ body {
   box-shadow: var(--glow);
 }
 
+.select-trigger span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .select-trigger {
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
 .chevron {
+  flex-shrink: 0;
   width: 1rem;
   height: 1rem;
   stroke: var(--primary);
@@ -387,8 +329,14 @@ body {
   transition: background 0.2s ease;
 }
 
-.select-menu div:hover {
+.select-menu div:hover,
+.select-menu div:focus {
   background: rgba(34,197,94,0.08);
+  color: var(--primary);
+  outline: none;
+}
+
+.select-menu div.active {
   color: var(--primary);
 }
 
@@ -398,9 +346,5 @@ body {
 
 /* Footer */
 .footer {
-  text-align: center;
-  padding: 3rem 0;
   border-top: 1px solid var(--border);
-  font-size: 0.75rem;
-  color: var(--text-muted);
 }

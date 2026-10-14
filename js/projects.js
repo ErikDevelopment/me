@@ -4,6 +4,10 @@
 const USERNAME = "ErikDevelopment";
 const API_REPOS = `https://api.github.com/users/${USERNAME}/repos?per_page=100&sort=updated`;
 const API_ORGS  = `https://api.github.com/users/${USERNAME}/orgs`;
+const GH_HEADERS = { headers: { Accept: "application/vnd.github+json" } };
+
+const CACHE_KEY = "gh-repos-v1";
+const CACHE_TTL = 15 * 60 * 1000; // 15 Minuten
 
 let activeOrga = "ALL";
 let currentSort = "updated";
@@ -19,79 +23,146 @@ const els = {
   search: document.getElementById("search"),
   hideForks: document.getElementById("hideForks"),
   sortSelect: document.getElementById("sortSelect"),
+  orgaSelect: document.getElementById("orgaSelect"),
+  orgaMenu: document.getElementById("orgaMenu"),
 };
 
-const orgaSelect = document.getElementById("orgaSelect");
-const orgaLabel  = orgaSelect.querySelector(".select-trigger span");
-const orgaMenu   = document.getElementById("orgaMenu");
-
 /* =======================
-   Custom Select – Sort
+   Custom Select (Maus + Tastatur)
 ======================= */
-const sortTrigger = els.sortSelect.querySelector(".select-trigger");
-const sortLabel   = els.sortSelect.querySelector(".select-trigger span");
-const sortOptions = els.sortSelect.querySelectorAll(".select-menu div");
+const selects = [];
 
-sortTrigger.addEventListener("click", () => {
-  els.sortSelect.classList.toggle("open");
-});
+function setupSelect(root, onChange) {
+  const trigger = root.querySelector(".select-trigger");
+  const label   = trigger.querySelector("span");
+  const menu    = root.querySelector(".select-menu");
 
-sortOptions.forEach(option => {
-  option.addEventListener("click", () => {
-    currentSort = option.dataset.value;
-    sortLabel.textContent = option.textContent;
+  const options = () => [...menu.querySelectorAll('[role="option"]')];
 
-    sortOptions.forEach(o => o.classList.remove("active"));
-    option.classList.add("active");
+  function open() {
+    selects.forEach(s => s !== api && s.close());
+    root.classList.add("open");
+    trigger.setAttribute("aria-expanded", "true");
+    const current = options().find(o => o.getAttribute("aria-selected") === "true");
+    (current || options()[0])?.focus();
+  }
 
-    els.sortSelect.classList.remove("open");
-    render();
+  function close() {
+    root.classList.remove("open");
+    trigger.setAttribute("aria-expanded", "false");
+  }
+
+  function choose(option) {
+    options().forEach(o => {
+      const selected = o === option;
+      o.classList.toggle("active", selected);
+      o.setAttribute("aria-selected", selected);
+    });
+    label.textContent = option.textContent.trim();
+    close();
+    trigger.focus();
+    onChange(option.dataset.value);
+  }
+
+  trigger.addEventListener("click", () => {
+    root.classList.contains("open") ? close() : open();
+  });
+
+  trigger.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      open();
+    }
+  });
+
+  menu.addEventListener("click", e => {
+    const option = e.target.closest('[role="option"]');
+    if (option) choose(option);
+  });
+
+  menu.addEventListener("keydown", e => {
+    const list = options();
+    const i = list.indexOf(document.activeElement);
+
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        list[Math.min(i + 1, list.length - 1)]?.focus();
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        list[Math.max(i - 1, 0)]?.focus();
+        break;
+      case "Home":
+        e.preventDefault();
+        list[0]?.focus();
+        break;
+      case "End":
+        e.preventDefault();
+        list[list.length - 1]?.focus();
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        if (i >= 0) choose(list[i]);
+        break;
+      case "Escape":
+        e.preventDefault();
+        close();
+        trigger.focus();
+        break;
+      case "Tab":
+        close();
+        break;
+    }
+  });
+
+  const api = { root, close };
+  selects.push(api);
+  return api;
+}
+
+// Ein globaler Listener schließt alle offenen Selects bei Klick außerhalb
+document.addEventListener("click", e => {
+  selects.forEach(s => {
+    if (!s.root.contains(e.target)) s.close();
   });
 });
 
-document.addEventListener("click", e => {
-  if (!els.sortSelect.contains(e.target)) {
-    els.sortSelect.classList.remove("open");
-  }
+setupSelect(els.sortSelect, value => {
+  currentSort = value;
+  render();
 });
 
-/* =======================
-   Custom Select – Orga
-======================= */
-orgaSelect.querySelector(".select-trigger").addEventListener("click", () => {
-  orgaSelect.classList.toggle("open");
-});
-
-document.addEventListener("click", e => {
-  if (!orgaSelect.contains(e.target)) {
-    orgaSelect.classList.remove("open");
-  }
+setupSelect(els.orgaSelect, value => {
+  activeOrga = value;
+  render();
 });
 
 /* =======================
    State
 ======================= */
 let allRepos = [];
-let publicOrgs = [];
 
 /* =======================
    Helpers
 ======================= */
 function fmtDate(iso) {
-  try {
-    return new Date(iso).toLocaleDateString("de-DE");
-  } catch {
-    return iso ?? "";
-  }
+  const d = new Date(iso);
+  return isNaN(d) ? escapeHtml(iso) : d.toLocaleDateString("de-DE");
 }
 
 function escapeHtml(str) {
-  return (str ?? "")
+  return String(str ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function safeUrl(url) {
+  return /^https:\/\/github\.com\//.test(url ?? "") ? escapeHtml(url) : "#";
 }
 
 function scoreRepo(repo) {
@@ -100,6 +171,43 @@ function scoreRepo(repo) {
 
 function getRepoOrga(repo) {
   return repo.owner?.login ?? "unknown";
+}
+
+/* =======================
+   Cache (localStorage, gilt über Tabs und Besuche hinweg)
+======================= */
+function readCache() {
+  try {
+    const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+    if (cached && Date.now() - cached.time < CACHE_TTL) return cached.repos;
+  } catch {
+    // Storage nicht verfügbar oder kaputt → ignorieren
+  }
+  return null;
+}
+
+function writeCache(repos) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ time: Date.now(), repos }));
+  } catch {
+    // Storage voll oder blockiert → ohne Cache weiter
+  }
+}
+
+// Nur die Felder behalten, die wir wirklich anzeigen (hält den Cache klein)
+function slimRepo(r) {
+  return {
+    name: r.name,
+    full_name: r.full_name,
+    html_url: r.html_url,
+    description: r.description,
+    language: r.language,
+    stargazers_count: r.stargazers_count,
+    forks_count: r.forks_count,
+    fork: r.fork,
+    updated_at: r.updated_at,
+    owner: { login: r.owner?.login },
+  };
 }
 
 /* =======================
@@ -116,22 +224,18 @@ function buildOrgaSelect(repos) {
     ...[...owners].filter(o => o !== USERNAME)
   ];
 
-  orgaMenu.innerHTML = orgas.map(o => `
-    <div data-orga="${o}">
-      ${o === "ALL" ? "Alle Repositories" : o}
+  els.orgaMenu.innerHTML = orgas.map(o => `
+    <div
+      role="option"
+      tabindex="-1"
+      data-value="${escapeHtml(o)}"
+      aria-selected="${o === activeOrga}"
+      class="${o === activeOrga ? "active" : ""}"
+    >
+      ${o === "ALL" ? "Alle Repos" : escapeHtml(o)}
     </div>
   `).join("");
-
-  orgaMenu.querySelectorAll("div").forEach(opt => {
-    opt.addEventListener("click", () => {
-      activeOrga = opt.dataset.orga;
-      orgaLabel.textContent = opt.textContent;
-      orgaSelect.classList.remove("open");
-      render();
-    });
-  });
 }
-
 
 /* =======================
    Filter + Sort
@@ -192,11 +296,11 @@ function renderRepoTiles(repos) {
   }
 
   return repos.map(repo => `
-    <a class="card" href="${repo.html_url}" target="_blank" rel="noopener noreferrer">
+    <a class="card" href="${safeUrl(repo.html_url)}" target="_blank" rel="noopener noreferrer">
       <div class="card-top">
         <div class="title">${escapeHtml(repo.name)}</div>
         <div class="badge ${scoreRepo(repo) >= 10 ? "primary" : ""}">
-          ${getRepoOrga(repo)}
+          ${escapeHtml(getRepoOrga(repo))}
         </div>
       </div>
 
@@ -205,9 +309,9 @@ function renderRepoTiles(repos) {
       </div>
 
       <div class="badges">
-        <span class="badge">${repo.language || "—"}</span>
-        <span class="badge">★ ${repo.stargazers_count}</span>
-        <span class="badge">⑂ ${repo.forks_count}</span>
+        <span class="badge">${escapeHtml(repo.language || "—")}</span>
+        <span class="badge">★ ${Number(repo.stargazers_count) || 0}</span>
+        <span class="badge">⑂ ${Number(repo.forks_count) || 0}</span>
         ${repo.fork ? `<span class="badge">fork</span>` : ``}
       </div>
 
@@ -223,40 +327,48 @@ function renderRepoTiles(repos) {
 /* =======================
    Load Data
 ======================= */
+async function fetchRepos() {
+  const [repoRes, orgRes] = await Promise.all([
+    fetch(API_REPOS, GH_HEADERS),
+    fetch(API_ORGS, GH_HEADERS)
+  ]);
+
+  if (!repoRes.ok) {
+    throw new Error(
+      repoRes.status === 403 || repoRes.status === 429
+        ? "GitHub API Rate-Limit erreicht. Bitte später erneut versuchen."
+        : `GitHub API Fehler (${repoRes.status}).`
+    );
+  }
+
+  const userRepos = (await repoRes.json()).filter(r => !r.disabled);
+  const publicOrgs = orgRes.ok ? await orgRes.json() : [];
+
+  const orgRepoPromises = publicOrgs.map(org =>
+    fetch(`https://api.github.com/orgs/${encodeURIComponent(org.login)}/repos?per_page=100`, GH_HEADERS)
+      .then(res => res.ok ? res.json() : [])
+  );
+
+  const orgRepos = (await Promise.all(orgRepoPromises))
+    .flat()
+    .filter(r => !r.disabled);
+
+  const repoMap = new Map();
+  [...userRepos, ...orgRepos].forEach(repo => {
+    repoMap.set(repo.full_name, slimRepo(repo));
+  });
+
+  return [...repoMap.values()];
+}
+
 async function loadData() {
   try {
-    const [repoRes, orgRes] = await Promise.all([
-      fetch(API_REPOS, { headers: { Accept: "application/vnd.github+json" }}),
-      fetch(API_ORGS,  { headers: { Accept: "application/vnd.github+json" }})
-    ]);
+    allRepos = readCache();
 
-    if (!repoRes.ok) {
-      throw new Error(
-        repoRes.status === 403 || repoRes.status === 429
-          ? "GitHub API Rate-Limit erreicht. Bitte später erneut versuchen."
-          : `GitHub API Fehler (${repoRes.status}).`
-      );
+    if (!allRepos) {
+      allRepos = await fetchRepos();
+      writeCache(allRepos);
     }
-
-    const userRepos = (await repoRes.json()).filter(r => !r.disabled);
-    publicOrgs = orgRes.ok ? await orgRes.json() : [];
-
-    const orgRepoPromises = publicOrgs.map(org =>
-      fetch(`https://api.github.com/orgs/${org.login}/repos?per_page=100`, {
-        headers: { Accept: "application/vnd.github+json" }
-      }).then(res => res.ok ? res.json() : [])
-    );
-
-    const orgRepos = (await Promise.all(orgRepoPromises))
-      .flat()
-      .filter(r => !r.disabled);
-
-    const repoMap = new Map();
-    [...userRepos, ...orgRepos].forEach(repo => {
-      repoMap.set(repo.full_name, repo);
-    });
-
-    allRepos = [...repoMap.values()];
 
     buildOrgaSelect(allRepos);
     render();
