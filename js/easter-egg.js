@@ -24,7 +24,12 @@ function detectPage() {
 
   if (path.includes("blog")) return "blog";
   if (path.includes("project")) return "projects";
-  if (path.includes("hub") || path.includes("index")) return "hub";
+  if (
+    path.includes("linktree") ||
+    path.includes("portfolio") ||
+    path.includes("index") ||
+    path.endsWith("/")
+  ) return "hub";
 
   return "default";
 }

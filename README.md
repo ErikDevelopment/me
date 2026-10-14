@@ -8,7 +8,7 @@ Ich entwickle moderne Webanwendungen, APIs und Automatisierungen – mit Fokus a
 ## 🌐 Live Website
 
 👉 **Linktree / Portfolio**  
-🔗 [https://ErikDevelopment.github.io](https://erikdevelopment.github.io/me/)
+🔗 [erikdevelopment.github.io/me](https://erikdevelopment.github.io/me/)
 
 ---
 
@@ -71,8 +71,11 @@ whoami
 skills
 cat projects.txt
 echo "Hire me 👀"
+```
 
-📫 Contact
+---
+
+## 📫 Contact
 
 - GitHub: https://github.com/ErikDevelopment
-- Website: https://ErikDevelopment.github.io
+- Website: https://erikdevelopment.github.io/me/

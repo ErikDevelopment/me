@@ -230,8 +230,16 @@ async function loadData() {
       fetch(API_ORGS,  { headers: { Accept: "application/vnd.github+json" }})
     ]);
 
+    if (!repoRes.ok) {
+      throw new Error(
+        repoRes.status === 403 || repoRes.status === 429
+          ? "GitHub API Rate-Limit erreicht. Bitte später erneut versuchen."
+          : `GitHub API Fehler (${repoRes.status}).`
+      );
+    }
+
     const userRepos = (await repoRes.json()).filter(r => !r.disabled);
-    publicOrgs = await orgRes.json();
+    publicOrgs = orgRes.ok ? await orgRes.json() : [];
 
     const orgRepoPromises = publicOrgs.map(org =>
       fetch(`https://api.github.com/orgs/${org.login}/repos?per_page=100`, {
@@ -258,7 +266,9 @@ async function loadData() {
   } catch (err) {
     els.loader.remove();
     els.error.hidden = false;
-    els.error.textContent = "Daten konnten nicht geladen werden.";
+    els.error.textContent = err.message.startsWith("GitHub API")
+      ? err.message
+      : "Daten konnten nicht geladen werden.";
     console.error(err);
   }
 }
